@@ -1,4 +1,3 @@
-
 services:
   frontend:
     build:
@@ -8,9 +7,17 @@ services:
       - "3000:3000"
     environment:
       - VITE_API_URL=http://backend:5000
+    command: npm run dev
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./mlops-frontend
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
     depends_on:
       - backend
-
   backend:
     build:
       context: ./mlops-backend
@@ -20,6 +27,13 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017/todo-app
       - PORT=5000
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./mlops-backend
+          target: /app
+          ignore:
+            - node_modules/
     depends_on:
       - mongo
 
